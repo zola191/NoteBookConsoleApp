@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileProvider.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="NoteBook.cs" />
     <Compile Include="NotebookStorage.cs" />
     <Compile Include="Program.cs" />

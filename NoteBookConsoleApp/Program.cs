@@ -1,70 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace NoteBookConsoleApp
 {
     public class Program
     {
-        static string formatOutput = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-15}||{7,-15}||{8,-15}||";
-        static string[] outputArray = new string[9]
+        static string formatOutput = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-15}||{7,-15}||{8,-15}||{9,-15}||";
+        static string[] outputArray = new string[10]
         {
-            "Имя", "Отчество", "Фамилия", "Номер телефона", "Страна", "Дата рождения", "Организация", "Должность", "Прочее"
+            "№","Имя", "Отчество", "Фамилия", "Номер телефона", "Страна", "Дата рождения", "Организация", "Должность", "Прочее"
         };
-
+        static int index = 0;
+        static List<string> menuLabels = new List<string>()
+        {
+                "1. Создание новой записи",
+                "2. Редактирование созданных записей",
+                "3. Удаление созданных записей",
+                "4. Просмотр всех созданных учетных записей, с краткой информацией",
+                "5. Просмотр созданных записей, с полной информацией",
+                "6. Выход"
+        };
         static void Main(string[] args)
         {
-            MainMenu();
-        }
-
-        static void MainMenu()
-        {
-            Console.WriteLine("Добро пожаловать в главное меню NoteBook");
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine("{0,-15}", "1. Создание новой записи");
-            Console.WriteLine("{0,-15}", "2. Редактирование созданных записей");
-            Console.WriteLine("{0,-15}", "3. Удаление созданных записей");
-            Console.WriteLine("{0,-15}", "4. Просмотр созданных записей, с полной информацией");
-            Console.WriteLine("{0,-15}", "5. Просмотр всех созданных учетных записей, с краткой информацией");
-            Console.WriteLine("\r\nВведите номер для перехода");
-
-            var isCorrectUserAnswer = TryGetMainMenuNumber(Console.ReadLine(), out string errorMessage);
-
-            while (!isCorrectUserAnswer)
+            while (true)
             {
-                Console.WriteLine(errorMessage);
-                isCorrectUserAnswer = TryGetMainMenuNumber(Console.ReadLine(), out errorMessage);
-            }
-        }
-
-        public static bool TryGetMainMenuNumber(string value, out string errorMessage)
-        {
-            switch (value)
-            {
-                case "1":
+                var selectedMenuItem = MainMenu(menuLabels);
+                if (selectedMenuItem == (int)Menu.CreateNewNote)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Создание новой записи");
                     CreateNewNotebook();
-                    errorMessage = null;
-                    return true;
-                case "2":
+                }
+                else if (selectedMenuItem == (int)Menu.EditNote)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Редактирование записей");
                     EditNotebook();
-                    errorMessage = null;
-                    return true;
-                case "3":
+                }
+                else if (selectedMenuItem == (int)Menu.RemoveNote)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Удаление записей");
                     RemoveNotebook();
-                    errorMessage = null;
-                    return true;
-                case "4":
+                }
+                else if (selectedMenuItem == (int)Menu.ShowFullNote)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Полная запись");
                     PrintFullInfo();
-                    errorMessage = null;
-                    return true;
-                case "5":
+                }
+                else if (selectedMenuItem == (int)Menu.ShowShortNote)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Короткая запись");
                     PrintShortInfo();
-                    errorMessage = null;
-                    return true;
-
+                }
+                else if (selectedMenuItem == (int)Menu.Exit)
+                {
+                    Console.Clear();
+                    break;
+                }
             }
-            errorMessage = "Введите число от 1 до 5";
-            return false;
+        }
+
+        private static int MainMenu(List<string> menuLabels)
+        {
+            //Console.OutputEncoding = System.Text.Encoding.UTF8;
+            //Console.InputEncoding = System.Text.Encoding.UTF8;
+
+            for (int i = 0; i < menuLabels.Count; i++)
+            {
+                if (i == index)
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.WriteLine("{0,-15}", menuLabels[i]);
+                }
+                else
+                {
+                    Console.WriteLine("{0,-15}", menuLabels[i]);
+                }
+                Console.ResetColor();
+            }
+            ConsoleKeyInfo key = Console.ReadKey();
+            if (key.Key == ConsoleKey.DownArrow)
+            {
+                if (index == menuLabels.Count - 1)
+                {
+                    index = 0;
+                }
+                else
+                {
+                    index++;
+                }
+            }
+            else if (key.Key == ConsoleKey.UpArrow)
+            {
+                if (index <= 0)
+                {
+                    index = menuLabels.Count - 1;
+                }
+                else
+                {
+                    index--;
+                }
+            }
+            else if (key.Key == ConsoleKey.Enter)
+            {
+                return index;
+            }
+            else if (key.Key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
+            }
+            Console.Clear();
+            return -1;
         }
 
         static void CreateNewNotebook()
@@ -107,8 +159,8 @@ namespace NoteBookConsoleApp
 
             Console.WriteLine("Введите страну");
             var inputCountry = Console.ReadLine();
-            Validator.TryGetCorrectStringValue(inputCountry, out string country, out errorMessage);
-            while (!Validator.TryGetCorrectStringValue(inputCountry, out country, out errorMessage))
+            Validator.TryGetCorrectCounrty(inputCountry, out string country, out errorMessage);
+            while (!Validator.TryGetCorrectCounrty(inputCountry, out country, out errorMessage))
             {
                 Console.WriteLine(errorMessage);
                 inputCountry = Console.ReadLine();
@@ -125,8 +177,8 @@ namespace NoteBookConsoleApp
 
             Console.WriteLine("Введите организацию, поле не является обязательным, для пропуска нажмите enter");
             var inputOrganization = Console.ReadLine();
-            Validator.TryGetCorrectOptionalStringValue(inputOrganization, out string organization, out errorMessage);
-            while (!Validator.TryGetCorrectOptionalStringValue(inputOrganization, out organization, out errorMessage))
+            Validator.TryGetCorrectOrganization(inputOrganization, out string organization, out errorMessage);
+            while (!Validator.TryGetCorrectOrganization(inputOrganization, out organization, out errorMessage))
             {
                 Console.WriteLine(errorMessage);
                 inputOrganization = Console.ReadLine();
@@ -134,8 +186,8 @@ namespace NoteBookConsoleApp
 
             Console.WriteLine("Введите должность, поле не является обязательным, для пропуска нажмите enter");
             var inputPosition = Console.ReadLine();
-            Validator.TryGetCorrectOptionalStringValue(inputPosition, out string position, out errorMessage);
-            while (!Validator.TryGetCorrectOptionalStringValue(inputPosition, out position, out errorMessage))
+            Validator.TryGetCorrectJobTitle(inputPosition, out string position, out errorMessage);
+            while (!Validator.TryGetCorrectJobTitle(inputPosition, out position, out errorMessage))
             {
                 Console.WriteLine(errorMessage);
                 inputPosition = Console.ReadLine();
@@ -143,42 +195,35 @@ namespace NoteBookConsoleApp
 
             Console.WriteLine("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter");
             var inputOther = Console.ReadLine();
-            Validator.TryGetCorrectOptionalStringValue(inputOther, out string other, out errorMessage);
-            while (!Validator.TryGetCorrectOptionalStringValue(inputOther, out other, out errorMessage))
-            {
-                Console.WriteLine(errorMessage);
-                inputOther = Console.ReadLine();
-            }
 
-            var notebook = new NoteBook(firstName, middleName, lastName, phoneNumber, country, birthDay, organization, position, other);
+            var notebook = new NoteBook(firstName, middleName, lastName, phoneNumber, country, birthDay, organization, position, inputOther);
             NotebookStorage.SaveToFile(notebook);
-            MainMenu();
+            Console.WriteLine("Запись успешно создана");
+            for (int i = 3; i >= 0; i++)
+            {
+                Console.WriteLine($"Вы перейдете в главное меню через {i}");
+                Thread.Sleep(1000);
+            }
+            Console.Clear();
+            MainMenu(menuLabels);
         }
 
         static void EditNotebook()
         {
-            Console.WriteLine("Хотите откорректировать запись? Введите да или нет");
-            var isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out bool isTrueUserAnswer, out string errorMessage);
+
+            var notebooks = NotebookStorage.GetFromFile();
+            Print(notebooks);
+
+            Console.WriteLine("Выберите номер записи для внесения корректировок");
+
+            var isParsedUserAnswer = TryGetNumberNotebook(Console.ReadLine(), out int numberNoteToEdit, out string errorMessage);
             while (!isParsedUserAnswer)
             {
                 Console.WriteLine(errorMessage);
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
+                isParsedUserAnswer = TryGetNumberNotebook(Console.ReadLine(), out numberNoteToEdit, out errorMessage);
             }
-            if (isTrueUserAnswer)
-            {
-                var notebooks = NotebookStorage.GetFromFile();
-                Print(notebooks);
-
-                Console.WriteLine("Выберите номер записи для внесения корректировок");
-
-                isParsedUserAnswer = TryGetNumberNotebook(Console.ReadLine(), out int numberToEdit, out errorMessage);
-                while (!isParsedUserAnswer)
-                {
-                    Console.WriteLine(errorMessage);
-                    isParsedUserAnswer = TryGetNumberNotebook(Console.ReadLine(), out numberToEdit, out errorMessage);
-                }
-                var notebook = notebooks[numberToEdit - 1];
-                var positionDict = new Dictionary<int, Action<NoteBook>>()
+            var notebook = notebooks[numberNoteToEdit - 1];
+            var positionDict = new Dictionary<int, Action<NoteBook>>()
                 {
                     {1,new Action<NoteBook>(a =>
                     {
@@ -278,77 +323,89 @@ namespace NoteBookConsoleApp
                     {9,new Action<NoteBook>(a =>
                     {
                         Console.WriteLine("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter");
-                        var inputOther = Console.ReadLine();
-                        Validator.TryGetCorrectOptionalStringValue(inputOther, out string other, out errorMessage);
-                        while (!Validator.TryGetCorrectOptionalStringValue(inputOther, out other, out errorMessage))
-                        {
-                            Console.WriteLine(errorMessage);
-                            inputOther = Console.ReadLine();
-                        }
-                        a.Other = other;
+                        a.Other = Console.ReadLine();
                     }) },
 
                 };
 
-                Console.WriteLine(formatOutput, outputArray);
-
-                var properties = notebook.GetType().GetProperties();
-                var propertiesValues = new List<object>();
-                foreach (var prop in properties)
-                {
-                    var val = prop.GetValue(notebook);
-                    propertiesValues.Add(val);
-                }
-
-                for (int i=0; i < propertiesValues.Count; i++)
-                {
-                    Console.WriteLine($"{i+1}-{propertiesValues.ElementAt(i)}");
-                }
-
-                Console.WriteLine("Выберите позицию для редактирования");
-                isParsedUserAnswer = TryGetPositionNotebook(Console.ReadLine(), out numberToEdit, out errorMessage);
-                while (!isParsedUserAnswer)
-                {
-                    Console.WriteLine(errorMessage);
-                    isParsedUserAnswer = TryGetPositionNotebook(Console.ReadLine(), out numberToEdit, out errorMessage);
-                }
-
-                positionDict[numberToEdit].Invoke(notebook);
-                NotebookStorage.Adjust(notebook, numberToEdit-1);
-                MainMenu();
-            }
-            else
+            var properties = notebook.GetType().GetProperties();
+            var propertiesValues = new List<object>();
+            foreach (var prop in properties)
             {
-                MainMenu();
+                var val = prop.GetValue(notebook);
+                propertiesValues.Add(val);
             }
+
+            for (int i = 0; i < propertiesValues.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}-{propertiesValues.ElementAt(i)}");
+            }
+
+            Console.WriteLine("Выберите позицию для редактирования");
+            isParsedUserAnswer = TryGetPositionNotebook(Console.ReadLine(), out int numberToEdit, out errorMessage);
+            while (!isParsedUserAnswer)
+            {
+                Console.WriteLine(errorMessage);
+                isParsedUserAnswer = TryGetPositionNotebook(Console.ReadLine(), out numberToEdit, out errorMessage);
+            }
+
+            positionDict[numberToEdit].Invoke(notebook);
+            NotebookStorage.Adjust(notebook, numberNoteToEdit - 1);
+            //добавить продолжение корректировки выбранной записи или дать возможность выбрать другую запись для редактирования
+            Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
+            MenuKey();
+        }
+
+        private static void MenuKey()
+        {
+            ConsoleKeyInfo key = Console.ReadKey();
+            while (true)
+            {
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    Console.Clear();
+                    return;
+                }
+                else if (key.Key == ConsoleKey.Escape)
+                {
+                    Console.Clear();
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
+                }
+                key = Console.ReadKey();
+            }
+
         }
 
         static void RemoveNotebook()
         {
-            Console.WriteLine("Хотите удалить запись? введите да или нет");
-            var isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out bool isTrueUserAnswer, out string errorMessage);
-            while (!isParsedUserAnswer)
+            var notebooks = NotebookStorage.GetFromFile();
+            if (notebooks.Count() == 0)
             {
-                Console.WriteLine(errorMessage);
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
+                Console.WriteLine("нет записей для удаления");
+                Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
+                MenuKey();
             }
-            if (isTrueUserAnswer)
+
+            else
             {
-                var notebooks = NotebookStorage.GetFromFile();
                 Print(notebooks);
 
                 Console.WriteLine("Выберите номер записи для удаления");
                 var inputUserAnswer = Console.ReadLine();
 
-                isParsedUserAnswer = TryGetNumberNotebook(inputUserAnswer, out int numberToRemove, out errorMessage);
+                var isParsedUserAnswer = TryGetNumberNotebook(inputUserAnswer, out int numberToRemove, out string errorMessage);
                 while (!isParsedUserAnswer)
                 {
                     Console.WriteLine(errorMessage);
                     isParsedUserAnswer = TryGetNumberNotebook(Console.ReadLine(), out numberToRemove, out errorMessage);
                 }
 
-                Console.WriteLine("Подтердите свой выбор, введите да или нет");
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
+                Console.WriteLine("Вы действительно хотите удалить выбранную запись? введите да или нет");
+                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out bool isTrueUserAnswer, out errorMessage);
                 while (!isParsedUserAnswer)
                 {
                     Console.WriteLine(errorMessage);
@@ -357,87 +414,36 @@ namespace NoteBookConsoleApp
 
                 if (isTrueUserAnswer)
                 {
-                    NotebookStorage.RemoveAtPosition(numberToRemove-1);
-                    MainMenu();
+                    NotebookStorage.RemoveAtPosition(numberToRemove - 1);
+                    MainMenu(menuLabels);
                 }
             }
-
-            else
-            {
-                MainMenu();
-            }
-
         }
 
         static void PrintShortInfo()
         {
-            Console.WriteLine("Хотите посмотреть записи? введите да или нет");
-            var isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out bool isTrueUserAnswer, out string errorMessage);
-            while (!isParsedUserAnswer)
+            var notebooks = NotebookStorage.GetFromFile();
+            string formatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-10} ||";
+            Console.WriteLine(formatOutput, "Поз.", "Фамилия:", "Имя:", "Номер телефона:");
+            for (int i = 0; i < notebooks.Count; i++)
             {
-                Console.WriteLine(errorMessage);
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
+                Console.WriteLine($"{formatOutput}", new string[4] { (i + 1).ToString(), notebooks[i].LastName, notebooks[i].FirstName, notebooks[i].PhoneNumber });
             }
-            if (isTrueUserAnswer)
-            {
-                var notebooks = NotebookStorage.GetFromFile();
-                string formatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-10} ||";
-                Console.WriteLine(formatOutput, "Поз.", "Фамилия:", "Имя:", "Номер телефона:");
-                for (int i = 0; i < notebooks.Count; i++)
-                {
-                    Console.WriteLine($"{formatOutput}", new string[4] { (i + 1).ToString(), notebooks[i].LastName, notebooks[i].FirstName, notebooks[i].PhoneNumber });
-                }
-                Console.WriteLine("Для выхода в главное меню введите да или нет");
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
-                while (!isParsedUserAnswer)
-                {
-                    Console.WriteLine(errorMessage);
-                    isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
-                }
-                if (isTrueUserAnswer)
-                {
-                    MainMenu();
-                }
-            }
-            else
-            {
-                MainMenu();
-            }
+
+            Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
+            MenuKey();
         }
 
         static void PrintFullInfo()
         {
-            Console.WriteLine("Хотите посмотреть записи? введите да или нет");
-            var isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out bool isTrueUserAnswer, out string errorMessage);
-            while (!isParsedUserAnswer)
+            var notebooks = NotebookStorage.GetFromFile();
+            Console.WriteLine(formatOutput, outputArray);
+            for (int i = 0; i < notebooks.Count; i++)
             {
-                Console.WriteLine(errorMessage);
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
+                Console.WriteLine($"{formatOutput}", ((i + 1).ToString() + " " + notebooks[i].ToString()).Split());
             }
-            if (isTrueUserAnswer)
-            {
-                var notebooks = NotebookStorage.GetFromFile();
-                Console.WriteLine(formatOutput, outputArray);
-                for (int i = 0; i < notebooks.Count; i++)
-                {
-                    Console.WriteLine($"{formatOutput}", ((i + 1).ToString() + " " + notebooks[i].ToString()).Split());
-                }
-                Console.WriteLine("Для выхода в главное меню введите да или нет");
-                isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
-                while (!isParsedUserAnswer)
-                {
-                    Console.WriteLine(errorMessage);
-                    isParsedUserAnswer = Validator.TryGetUserAnswer(Console.ReadLine(), out isTrueUserAnswer, out errorMessage);
-                }
-                if (isTrueUserAnswer)
-                {
-                    MainMenu();
-                }
-            }
-            else
-            {
-                MainMenu();
-            }
+            Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
+            MenuKey();
         }
 
         static void Print(List<NoteBook> notebooks)

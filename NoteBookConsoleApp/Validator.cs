@@ -8,7 +8,7 @@ namespace NoteBookConsoleApp
     {
         public static bool TryGetCorrectStringValue(string value, out string result, out string errorMessage)
         {
-            if (!value.All(char.IsLetter) || string.IsNullOrEmpty(value))
+            if (!value.Split().All(f=>f.All(char.IsLetter)) || string.IsNullOrEmpty(value))
             {
                 result = null;
                 errorMessage = "Используйте только буквы";
@@ -17,7 +17,58 @@ namespace NoteBookConsoleApp
 
             else
             {
-                result = char.ToUpper(value[0])+value.Substring(1);
+                result = char.ToUpper(value[0]) + value.Substring(1);
+                errorMessage = null;
+                return true;
+            }
+        }
+
+        public static bool TryGetCorrectCounrty(string value, out string result, out string errorMessage)
+        {
+            if (!value.Split().All(f => f.All(char.IsLetter)) || string.IsNullOrEmpty(value))
+            {
+                result = null;
+                errorMessage = "Используйте только буквы";
+                return false;
+            }
+
+            else
+            {
+                result = char.ToUpper(value[0]) + value.Substring(1);
+                errorMessage = null;
+                return true;
+            }
+        }
+
+        public static bool TryGetCorrectOrganization(string value, out string result, out string errorMessage)
+        {
+            if (!value.Where(char.IsPunctuation).All(f=>f=='"') && value.Any(char.IsDigit) || string.IsNullOrEmpty(value))
+            {
+                result = null;
+                errorMessage = "Используйте только буквы";
+                return false;
+            }
+
+            else
+            {
+                result = char.ToUpper(value[0]) + value.Substring(1);
+                errorMessage = null;
+                return true;
+            }
+        }
+
+        public static bool TryGetCorrectJobTitle(string value, out string result, out string errorMessage)
+        {
+            if (value.Any(char.IsDigit) || string.IsNullOrEmpty(value))
+            {
+                result = null;
+                errorMessage = "Используйте только буквы";
+                return false;
+            }
+
+            else
+            {
+                result = char.ToUpper(value[0]) + value.Substring(1);
                 errorMessage = null;
                 return true;
             }
@@ -63,6 +114,12 @@ namespace NoteBookConsoleApp
 
             if (adjustedValue.Count() != 11)
             {
+                if (adjustedValue.First() != '8')
+                {
+                    result = null;
+                    errorMessage = "Номер должен начинаться с 8. Длина номера не должна превышать 11 символов";
+                    return false;
+                }
                 result = null;
                 errorMessage = "Длина номера не должна превышать 11 символов";
                 return false;
@@ -71,7 +128,7 @@ namespace NoteBookConsoleApp
             if (adjustedValue.First() != '8')
             {
                 result = null;
-                errorMessage = "Номер не начинается с 8";
+                errorMessage = "Номер должен начинаться с 8.";
                 return false;
             }
             result = string.Join("", adjustedValue);
@@ -115,7 +172,7 @@ namespace NoteBookConsoleApp
             }
         }
 
-        public static bool TryGetUserAnswer(string value,out bool result, out string errorMessage)
+        public static bool TryGetUserAnswer(string value, out bool result, out string errorMessage)
         {
             while (true)
             {
