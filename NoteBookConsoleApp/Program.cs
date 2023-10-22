@@ -7,7 +7,7 @@ namespace NoteBookConsoleApp
 {
     public class Program
     {
-        static string formatOutput = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-15}||{7,-15}||{8,-15}||{9,-15}||";
+        static string formatOutput = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-20}||{6,-15}||{7,-20}||{8,-15}||{9,-25}||";
         static string[] outputArray = new string[10]
         {
             "№","Имя", "Отчество", "Фамилия", "Номер телефона", "Страна", "Дата рождения", "Организация", "Должность", "Прочее"
@@ -24,6 +24,9 @@ namespace NoteBookConsoleApp
         };
         static void Main(string[] args)
         {
+            var notebok = new NoteBook("1", "2", "3", "80535145678", "1", new DateTime(1991, 1, 1), "1", "2", "3");
+
+
             while (true)
             {
                 var selectedMenuItem = MainMenu(menuLabels);
@@ -199,7 +202,7 @@ namespace NoteBookConsoleApp
             var notebook = new NoteBook(firstName, middleName, lastName, phoneNumber, country, birthDay, organization, position, inputOther);
             NotebookStorage.SaveToFile(notebook);
             Console.WriteLine("Запись успешно создана");
-            for (int i = 3; i >= 0; i++)
+            for (int i = 3; i >= 0; i--)
             {
                 Console.WriteLine($"Вы перейдете в главное меню через {i}");
                 Thread.Sleep(1000);
@@ -294,7 +297,7 @@ namespace NoteBookConsoleApp
                             Console.WriteLine(errorMessage);
                             isCorrectDate = Validator.TryGetCorrectBirthDate(inputBirthDay, out birthDay, out errorMessage);
                         }
-                        a.BirthDay = birthDay.ToShortDateString();
+                        a.BirthDay = birthDay;
                     }) },
                     {7,new Action<NoteBook>(a =>
                     {
@@ -423,7 +426,7 @@ namespace NoteBookConsoleApp
         static void PrintShortInfo()
         {
             var notebooks = NotebookStorage.GetFromFile();
-            string formatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-10} ||";
+            string formatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-15} ||";
             Console.WriteLine(formatOutput, "Поз.", "Фамилия:", "Имя:", "Номер телефона:");
             for (int i = 0; i < notebooks.Count; i++)
             {
@@ -440,7 +443,20 @@ namespace NoteBookConsoleApp
             Console.WriteLine(formatOutput, outputArray);
             for (int i = 0; i < notebooks.Count; i++)
             {
-                Console.WriteLine($"{formatOutput}", ((i + 1).ToString() + " " + notebooks[i].ToString()).Split());
+                var item = notebooks[i];
+                Console.WriteLine($"{formatOutput}", new string[10]
+                {
+                    (i+1).ToString(),
+                    notebooks[i].FirstName.ToString(),
+                    notebooks[i].MiddleName.ToString(),
+                    notebooks[i].LastName.ToString(),
+                    notebooks[i].PhoneNumber.ToString(),
+                    notebooks[i].Country.ToString(),
+                    notebooks[i].BirthDay.ToString("dd:MM:yyyy"),
+                    notebooks[i].Organization.ToString(),
+                    notebooks[i].Position.ToString(),
+                    notebooks[i].Other.ToString(),
+                }); //(i + 1),notebooks[i]
             }
             Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
             MenuKey();
@@ -451,7 +467,20 @@ namespace NoteBookConsoleApp
             Console.WriteLine(formatOutput, outputArray);
             for (int i = 0; i < notebooks.Count; i++)
             {
-                Console.WriteLine($"{formatOutput}", ((i + 1).ToString() + " " + notebooks[i].ToString()).Split());
+                var item = notebooks[i];
+                Console.WriteLine($"{formatOutput}", new string[10]
+                {
+                    (i+1).ToString(),
+                    notebooks[i].FirstName.ToString(),
+                    notebooks[i].MiddleName.ToString(),
+                    notebooks[i].LastName.ToString(),
+                    notebooks[i].PhoneNumber.ToString(),
+                    notebooks[i].Country.ToString(),
+                    notebooks[i].BirthDay.ToString("dd:MM:yyyy"),
+                    notebooks[i].Organization.ToString(),
+                    notebooks[i].Position.ToString(),
+                    notebooks[i].Other.ToString(),
+                } ); //(i + 1),notebooks[i]
             }
         }
 

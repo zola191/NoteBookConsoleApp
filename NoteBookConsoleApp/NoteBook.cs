@@ -1,15 +1,22 @@
-﻿using System;
+﻿using NoteBookConsoleApp.Attributes;
+using System;
 
 namespace NoteBookConsoleApp
 {
     public class NoteBook
     {
+        [String(IsEmpty = false, MinLength = 2)]
         public string FirstName { get; set; }
+        [String(IsEmpty = false, MinLength = 2)]
         public string MiddleName { get; set; } //(поле не является обязательным);
+        [String(IsEmpty = false, MinLength = 2)]
         public string LastName { get; set; }
+        [String(IsEmpty = false, MinLength = 11, MaxLength = 11, StartWith = '8')]
         public string PhoneNumber { get; set; }
+        [String(IsEmpty = false)]
         public string Country { get; set; }
-        public string BirthDay { get; set; } //(поле не является обязательным);
+        [Newtonsoft.Json.JsonConverter(typeof(DataTimeCustomConverter))]
+        public DateTime BirthDay { get; set; } //(поле не является обязательным);
         public string Organization { get; set; } //(поле не является обязательным);
         public string Position { get; set; } //(поле не является обязательным);
         public string Other { get; set; } //(поле не является обязательным);
@@ -21,7 +28,7 @@ namespace NoteBookConsoleApp
             LastName = lastName;
             PhoneNumber = phoneNumber;
             Country = country;
-            BirthDay = birthDay.ToShortDateString();
+            BirthDay = birthDay;
             Organization = organization;
             Position = position;
             Other = other;
@@ -29,7 +36,7 @@ namespace NoteBookConsoleApp
 
         public override string ToString()
         {
-            return $"{FirstName} {MiddleName} {LastName} {PhoneNumber} {Country} {BirthDay} {Organization} {Position} {Other}";
+            return $"{FirstName}_{MiddleName}_{LastName}_{PhoneNumber}_{Country}_{BirthDay}_{Organization}_{Position}_{Other}";
         }
     }
 }

@@ -8,7 +8,7 @@ namespace NoteBookConsoleApp
     {
         public static bool TryGetCorrectStringValue(string value, out string result, out string errorMessage)
         {
-            if (!value.Split().All(f=>f.All(char.IsLetter)) || string.IsNullOrEmpty(value))
+            if (!value.Split().All(f => f.All(char.IsLetter)) || string.IsNullOrEmpty(value))
             {
                 result = null;
                 errorMessage = "Используйте только буквы";
@@ -42,7 +42,7 @@ namespace NoteBookConsoleApp
 
         public static bool TryGetCorrectOrganization(string value, out string result, out string errorMessage)
         {
-            if (!value.Where(char.IsPunctuation).All(f=>f=='"') && value.Any(char.IsDigit) || string.IsNullOrEmpty(value))
+            if (!value.Where(char.IsPunctuation).All(f => f == '"') && value.Any(char.IsDigit) || string.IsNullOrEmpty(value))
             {
                 result = null;
                 errorMessage = "Используйте только буквы";
