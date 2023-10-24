@@ -15,24 +15,27 @@ namespace NoteBookConsoleApp
             typeof(NotNullAttribute)
         };
 
-        public void CheckValidation(object o)
+        public bool CheckValidation(object o)
         {
             var shouldBeValidated = o.GetType()
                                      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                      .SelectMany(f => f.CustomAttributes)
-                                     .Where(f => validationAtt.Any(q => q.GetType() == f.GetType())).Count() > 0;
+                                     .Where(f => validationAtt.Any(q => q == f.GetType())).Count() > 0;
 
             if (shouldBeValidated)
             {
-                var validationProp = o.GetType()
-                                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                     .SelectMany(q => q.CustomAttributes);
+                var propinfo = o.GetType()
+                                .GetProperties()
+                                .Where(f=>f.CustomAttributes.Any(q=> validationAtt.Contains(q.GetType())));
 
-                foreach (var prop in validationProp)
+                foreach (var prop in propinfo)
                 {
                     var value = prop.GetValue(o, null);
                 }
+
             }
+
+            return false;
         }
     }
 }
