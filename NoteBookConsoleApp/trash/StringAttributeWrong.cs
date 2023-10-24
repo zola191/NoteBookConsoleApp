@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Schema;
 
 namespace NoteBookConsoleApp.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class StringAttribute : Attribute
+    public class StringAttributeWrong : Attribute
     {
         public bool IsEmpty {  get; set; }
         public int MinLength { get; set; }
@@ -13,7 +11,6 @@ namespace NoteBookConsoleApp.Attributes
         public char StartWith { get; set; }
         public string FormatString { get; set; }
 
-        //проверка на Null?
         public static bool TryGetCorrectName(string value, out string result, out string errorMessage)
         {
             if (value == null)

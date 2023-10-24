@@ -5,15 +5,19 @@ namespace NoteBookConsoleApp
 {
     public class NoteBook
     {
-        [String(IsEmpty = false, MinLength = 2)]
+        [NotNull(false)]
+        [StringMinLength(2)]
         public string FirstName { get; set; }
-        [String(IsEmpty = false, MinLength = 2)]
+        [NotNull(false)]
+        [StringMinLength(2)]
         public string MiddleName { get; set; } //(поле не является обязательным);
-        [String(IsEmpty = false, MinLength = 2)]
+        [NotNull(false)]
+        [StringMinLength(2)]
         public string LastName { get; set; }
-        [String(IsEmpty = false, MinLength = 11, MaxLength = 11, StartWith = '8')]
+        [NotNull(false)]
+        [StringMinLength(11)]
+        [StringMaxLength(11)]
         public string PhoneNumber { get; set; }
-        [String(IsEmpty = false)]
         public string Country { get; set; }
         [Newtonsoft.Json.JsonConverter(typeof(DataTimeCustomConverter))]
         public DateTime BirthDay { get; set; } //(поле не является обязательным);
