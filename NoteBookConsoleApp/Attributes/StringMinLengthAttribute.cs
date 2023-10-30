@@ -3,7 +3,7 @@
 namespace NoteBookConsoleApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class StringMinLengthAttribute:Attribute, IAttributeValidator
+    public class StringMinLengthAttribute : Attribute, IAttributeValidator
     {
         public int MinLength { get; set; }
 

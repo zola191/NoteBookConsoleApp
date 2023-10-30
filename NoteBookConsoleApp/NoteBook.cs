@@ -3,6 +3,7 @@ using System;
 
 namespace NoteBookConsoleApp
 {
+    [Cap]
     public class NoteBook
     {
         [NotNull(false)]
@@ -36,6 +37,11 @@ namespace NoteBookConsoleApp
             Organization = organization;
             Position = position;
             Other = other;
+        }
+
+        public NoteBook()
+        {
+
         }
 
         public override string ToString()

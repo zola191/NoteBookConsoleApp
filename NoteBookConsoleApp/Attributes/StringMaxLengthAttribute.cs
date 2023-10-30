@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Schema;
 
 namespace NoteBookConsoleApp.Attributes
 {
@@ -16,7 +15,7 @@ namespace NoteBookConsoleApp.Attributes
         {
             if (value is string)
             {
-                var item = (string) value;
+                var item = (string)value;
                 errorMessage = string.Empty;
                 return item.Length > MaxLength;
             }

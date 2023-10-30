@@ -2,10 +2,10 @@
 
 namespace NoteBookConsoleApp.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property |AttributeTargets.Field)]
-    public class NotNullAttribute:Attribute, IAttributeValidator
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    public class NotNullAttribute : Attribute, IAttributeValidator
     {
-        private bool IsNull {  get; set; }
+        private bool IsNull { get; set; }
 
         public NotNullAttribute(bool isNull)
         {

@@ -1,11 +1,32 @@
-﻿using System;
+﻿using NoteBookConsoleApp.Attributes;
+using System;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace NoteBookConsoleApp
 {
     public static class Validator
     {
+
+        //var z = o.GetType()
+        // .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        // .SelectMany(f => f.CustomAttributes).ToList();
+
+        //var y = o.GetType()
+        //         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        //         .SelectMany(f => f.CustomAttributes)
+        //         .Any(f => f.GetType() == typeof(StringMinLengthAttribute));
+
+        //var shouldBeValidated = o.GetType()
+        //                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        //                         .SelectMany(f => f.CustomAttributes)
+        //                         .Where(f => validationAtt.Any(q => q == f.GetType())).Count() > 0;
+
+        //var shouldBeValidatedVer2 = o.GetType()
+        //                             .GetCustomAttributes()
+        //                             .Any(f => f.ToString() == "CapAttribute");
+
         public static bool TryGetCorrectStringValue(string value, out string result, out string errorMessage)
         {
             if (!value.Split().All(f => f.All(char.IsLetter)) || string.IsNullOrEmpty(value))

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using NoteBookConsoleApp.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace NoteBookConsoleApp
@@ -25,7 +28,6 @@ namespace NoteBookConsoleApp
         static void Main(string[] args)
         {
             var notebok = new NoteBook("1", "2", "3", "80535145678", "1", new DateTime(1991, 1, 1), "1", "2", "3");
-
 
             while (true)
             {
@@ -124,18 +126,36 @@ namespace NoteBookConsoleApp
 
         static void CreateNewNotebook()
         {
+            var notebok = new NoteBook();
+            notebok.FirstName = "asdasd";
+
+            var attributeValidator = new AttributeValidator();
+            attributeValidator.CheckValidation(notebok);
+
             Console.WriteLine("Введите Имя");
-            var inputFirstName = Console.ReadLine();
-            Validator.TryGetCorrectStringValue(inputFirstName, out string firstName, out string errorMessage);
-            while (!Validator.TryGetCorrectStringValue(inputFirstName, out firstName, out errorMessage))
+            var firstName = Console.ReadLine();
+
+            var propName = "FirstName";
+            var props = notebok.GetType().GetProperties().Where(f => f.Name == propName);
+
+            if (props.Count() != 0)
             {
-                Console.WriteLine(errorMessage);
-                inputFirstName = Console.ReadLine();
+                var valid = attributeValidator.CheckValidation(notebok, props.First, firstName);
+                while (!valid)
+                {
+                    Console.WriteLine("Потрачено");
+                    firstName = Console.ReadLine();
+                    valid = attributeValidator.CheckValidation(notebok, props.First, firstName);
+                }
+                props.First().SetValue(notebok, firstName, null);
+                Console.ReadKey();
             }
+
+
 
             Console.WriteLine("Введите Отчество, поле не является обязательным, для пропуска нажмите enter");
             var inputMiddleName = Console.ReadLine();
-            Validator.TryGetCorrectOptionalStringValue(inputMiddleName, out string middleName, out errorMessage);
+            Validator.TryGetCorrectOptionalStringValue(inputMiddleName, out string middleName, out string errorMessage);
             while (!Validator.TryGetCorrectOptionalStringValue(inputMiddleName, out middleName, out errorMessage))
             {
                 Console.WriteLine(errorMessage);
@@ -480,7 +500,7 @@ namespace NoteBookConsoleApp
                     notebooks[i].Organization.ToString(),
                     notebooks[i].Position.ToString(),
                     notebooks[i].Other.ToString(),
-                } ); //(i + 1),notebooks[i]
+                }); //(i + 1),notebooks[i]
             }
         }
 
