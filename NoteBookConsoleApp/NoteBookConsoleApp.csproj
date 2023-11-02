@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CapAttribute.cs" />
+    <Compile Include="Attributes\DateCorrectBirthDateAttribute.cs" />
+    <Compile Include="Attributes\StringContainsNumberAttribute.cs" />
+    <Compile Include="Attributes\StringOfDigit.cs" />
     <Compile Include="DataTimeCustomConverter.cs" />
     <Compile Include="Attributes\StringMaxLengthAttribute.cs" />
     <Compile Include="Attributes\StringMinLengthAttribute.cs" />

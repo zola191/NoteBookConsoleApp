@@ -6,22 +6,38 @@ namespace NoteBookConsoleApp.Attributes
     public class StringMinLengthAttribute : Attribute, IAttributeValidator
     {
         public int MinLength { get; set; }
+        public bool IsNullable { get; set; }
 
-        public StringMinLengthAttribute(int minLength)
+        public StringMinLengthAttribute(int minLength) // не более 5 аргументов в атрибуте
         {
             MinLength = minLength;
         }
+        public StringMinLengthAttribute(int minLength, bool isNullable) // не более 5 аргументов в атрибуте
+        {
+            MinLength = minLength;
+            IsNullable = isNullable;
+        }
         public bool IsValid(object value, out string errorMessage)
         {
-            if (value is string)
+            errorMessage = string.Empty;
+            if (IsNullable && string.IsNullOrEmpty((string)value))
             {
-                var item = (string)value;
-                errorMessage = string.Empty;
-                return item.Length < MinLength;
+                return true;
             }
-            errorMessage = $"Длина строки меньше {MinLength}";
-            return false;
-        }
+            
+            if (!IsNullable && string.IsNullOrEmpty((string)value))
+            {
+                errorMessage = $"Строка не должна быть пустой";
+                return false;
+            }
 
+            var item = (string)value;
+            if (item.Length < MinLength)
+            {
+                errorMessage = $"Длина строки не должна быть меньше {MinLength} символов";
+                return false;
+            }
+            return true;
+        }
     }
 }

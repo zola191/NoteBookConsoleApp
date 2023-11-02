@@ -12,7 +12,8 @@ namespace NoteBookConsoleApp
         {
             typeof(StringMinLengthAttribute),
             typeof(StringMaxLengthAttribute),
-            typeof(NotNullAttribute)
+            typeof(NotNullAttribute),
+            typeof(DateCorrectBirthDateAttribute)
         };
 
         public bool CheckValidation(object o)
@@ -21,7 +22,6 @@ namespace NoteBookConsoleApp
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                      .SelectMany(f => f.CustomAttributes)
                      .Any(f => validationAtt.Any(q => q == f.AttributeType));
-
 
             if (shouldBeValidated)
             {
@@ -39,7 +39,7 @@ namespace NoteBookConsoleApp
                         {
                             if (att is IAttributeValidator)
                             {
-                                var validator =(IAttributeValidator) new object();
+                                var validator = (IAttributeValidator)att;
                                 if (validator.IsValid(value, out string errorMessage))
                                 {
                                     return true;
@@ -53,15 +53,15 @@ namespace NoteBookConsoleApp
         }
 
 
-        public bool CheckValidation(object o, Func<PropertyInfo> func, string value)
+        public bool CheckValidation(Func<PropertyInfo> func, string value,out List<string> errors)
         {
-            var shouldBeValidated = o.GetType()
-                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                     .Where(f => f.Name == func.Invoke().Name)
-                     .SelectMany(f => f.CustomAttributes)
-                     .Any(f => validationAtt.Any(q => q == f.AttributeType));
+            errors = new List<string>();
 
-            if (shouldBeValidated)
+            var shouldBeValidated = func?.Invoke()
+                                        .CustomAttributes
+                                        .Any(f => validationAtt.Any(q => q == f.AttributeType));
+
+            if (shouldBeValidated.Value)
             {
                 var propinfo = func.Invoke();
                 var atts = propinfo.GetCustomAttributes(true);
@@ -71,16 +71,16 @@ namespace NoteBookConsoleApp
                     {
                         if (att is IAttributeValidator)
                         {
-                            var validator = (IAttributeValidator)new object();
-                            if (validator.IsValid(value, out string errorMessage))
+                            var validator = (IAttributeValidator)att;
+                            if (!validator.IsValid(value, out string errorMessage))
                             {
-                                return true;
+                                errors.Add(errorMessage);
                             }
                         }
                     }
                 }
             }
-            return false;
+            return errors.Count() == 0;
         }
     }
 }

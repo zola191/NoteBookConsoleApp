@@ -6,27 +6,45 @@ namespace NoteBookConsoleApp
     [Cap]
     public class NoteBook
     {
-        [NotNull(false)]
         [StringMinLength(2)]
+        [StringContainsNumber(false)]
         public string FirstName { get; set; }
-        [NotNull(false)]
+
+        [StringMinLength(2, true)]
+        [StringContainsNumber(false)]
+        public string MiddleName { get; set; } // вопрос если пользователь ввел строку, то должен отрабатывать атрибут
+
         [StringMinLength(2)]
-        public string MiddleName { get; set; } //(поле не является обязательным);
-        [NotNull(false)]
-        [StringMinLength(2)]
+        [StringContainsNumber(false)]
         public string LastName { get; set; }
-        [NotNull(false)]
+
         [StringMinLength(11)]
         [StringMaxLength(11)]
+        [StringOfDigit(true)]
         public string PhoneNumber { get; set; }
+
+        [StringMinLength(2)]
+        [StringContainsNumber(false)]
         public string Country { get; set; }
-        [Newtonsoft.Json.JsonConverter(typeof(DataTimeCustomConverter))]
-        public DateTime BirthDay { get; set; } //(поле не является обязательным);
+
+        [DateCorrectBirthDate]
+        public DateTime BirthDay { get; set; } //(поле не является обязательным); // вопрос по валидации
+
+        [StringMinLength(2, true)]
+        [StringContainsNumber(false)]
         public string Organization { get; set; } //(поле не является обязательным);
+
+        [StringMinLength(2, true)]
+        [StringContainsNumber(false)]
         public string Position { get; set; } //(поле не является обязательным);
+
+        [StringMinLength(2, true)]
+        [StringContainsNumber(false)]
         public string Other { get; set; } //(поле не является обязательным);
 
-        public NoteBook(string firstName, string middleName, string lastName, string phoneNumber, string country, DateTime birthDay, string organization, string position, string other)
+        public NoteBook(string firstName, string middleName, string lastName,
+                        string phoneNumber, string country, DateTime birthDay,
+                        string organization, string position, string other)
         {
             FirstName = firstName;
             MiddleName = middleName;

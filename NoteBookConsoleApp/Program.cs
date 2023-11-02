@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using NoteBookConsoleApp.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -25,6 +24,19 @@ namespace NoteBookConsoleApp
                 "5. Просмотр созданных записей, с полной информацией",
                 "6. Выход"
         };
+        static Dictionary<string, Func<PropertyInfo>> dict = new Dictionary<string, Func<PropertyInfo>>()
+        {
+            { "FirstName", ()=>typeof(NoteBook).GetProperty("FirstName") },
+            { "MiddleName", ()=>typeof(NoteBook).GetProperty("MiddleName") },
+            { "LastName", ()=>typeof(NoteBook).GetProperty("LastName") },
+            { "PhoneNumber", ()=>typeof(NoteBook).GetProperty("PhoneNumber") },
+            { "Country", ()=>typeof(NoteBook).GetProperty("Country") },
+            { "BirthDay", ()=>typeof(NoteBook).GetProperty("BirthDay") },
+            { "Organization", ()=>typeof(NoteBook).GetProperty("Organization") },
+            { "Position", ()=>typeof(NoteBook).GetProperty("Position") },
+            { "Other", ()=>typeof(NoteBook).GetProperty("Other") },
+        };
+
         static void Main(string[] args)
         {
             var notebok = new NoteBook("1", "2", "3", "80535145678", "1", new DateTime(1991, 1, 1), "1", "2", "3");
@@ -126,100 +138,123 @@ namespace NoteBookConsoleApp
 
         static void CreateNewNotebook()
         {
-            var notebok = new NoteBook();
-            notebok.FirstName = "asdasd";
-
             var attributeValidator = new AttributeValidator();
-            attributeValidator.CheckValidation(notebok);
-
+            //GetInput("Введите свой номер телефона, начните ввод с 8", "PhoneNumber");
+            //GetInput("Введите дату рождения в формате ####-##-##, поле не является обязательным, для пропуска нажмите enter", "BirthDay");
             Console.WriteLine("Введите Имя");
-            var firstName = Console.ReadLine();
-
-            var propName = "FirstName";
-            var props = notebok.GetType().GetProperties().Where(f => f.Name == propName);
-
-            if (props.Count() != 0)
+            var inputFirstName = Console.ReadLine();
+            var valid = attributeValidator.CheckValidation(dict["FirstName"], inputFirstName, out List<string> errors);
+            while (!valid)
             {
-                var valid = attributeValidator.CheckValidation(notebok, props.First, firstName);
-                while (!valid)
-                {
-                    Console.WriteLine("Потрачено");
-                    firstName = Console.ReadLine();
-                    valid = attributeValidator.CheckValidation(notebok, props.First, firstName);
-                }
-                props.First().SetValue(notebok, firstName, null);
-                Console.ReadKey();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите Имя");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["FirstName"], inputFirstName, out errors);
             }
-
-
 
             Console.WriteLine("Введите Отчество, поле не является обязательным, для пропуска нажмите enter");
             var inputMiddleName = Console.ReadLine();
-            Validator.TryGetCorrectOptionalStringValue(inputMiddleName, out string middleName, out string errorMessage);
-            while (!Validator.TryGetCorrectOptionalStringValue(inputMiddleName, out middleName, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["MiddleName"], inputMiddleName, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
-                inputMiddleName = Console.ReadLine();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите Отчество, поле не является обязательным, для пропуска нажмите enter");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["MiddleName"], inputMiddleName, out errors);
             }
 
             Console.WriteLine("Введите Фамилию");
             var inputLastName = Console.ReadLine();
-            Validator.TryGetCorrectStringValue(inputLastName, out string lastName, out errorMessage);
-            while (!Validator.TryGetCorrectStringValue(inputLastName, out lastName, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["LastName"], inputLastName, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
-                inputLastName = Console.ReadLine();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите Фамилию");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["LastName"], inputLastName, out errors);
             }
 
             Console.WriteLine("Введите свой номер телефона, начните ввод с 8");
             var inputPhoneNumber = Console.ReadLine();
-            Validator.TryGetCorrectPhoneNumber(inputPhoneNumber, out string phoneNumber, out errorMessage);
-            while (!Validator.TryGetCorrectPhoneNumber(inputPhoneNumber, out phoneNumber, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["PhoneNumber"], inputPhoneNumber, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
-                inputPhoneNumber = Console.ReadLine();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите свой номер телефона, начните ввод с 8");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["PhoneNumber"], inputPhoneNumber, out errors);
             }
 
             Console.WriteLine("Введите страну");
             var inputCountry = Console.ReadLine();
-            Validator.TryGetCorrectCounrty(inputCountry, out string country, out errorMessage);
-            while (!Validator.TryGetCorrectCounrty(inputCountry, out country, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["Country"], inputCountry, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
-                inputCountry = Console.ReadLine();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите страну");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["Country"], inputCountry, out errors);
             }
 
             Console.WriteLine("Введите дату рождения в формате ####-##-##, поле не является обязательным, для пропуска нажмите enter");
             var inputBirthDay = Console.ReadLine();
-            Validator.TryGetCorrectBirthDate(inputBirthDay, out DateTime birthDay, out errorMessage);
-            while (!Validator.TryGetCorrectBirthDate(inputBirthDay, out birthDay, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["BirthDay"], inputBirthDay, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
-                inputBirthDay = Console.ReadLine();
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите дату рождения в формате ####-##-##, поле не является обязательным, для пропуска нажмите enter");
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["BirthDay"], inputBirthDay, out errors);
             }
 
             Console.WriteLine("Введите организацию, поле не является обязательным, для пропуска нажмите enter");
             var inputOrganization = Console.ReadLine();
-            Validator.TryGetCorrectOrganization(inputOrganization, out string organization, out errorMessage);
-            while (!Validator.TryGetCorrectOrganization(inputOrganization, out organization, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["Organization"], inputOrganization, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите организацию, поле не является обязательным, для пропуска нажмите enter");
                 inputOrganization = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["Organization"], inputOrganization, out errors);
             }
 
             Console.WriteLine("Введите должность, поле не является обязательным, для пропуска нажмите enter");
             var inputPosition = Console.ReadLine();
-            Validator.TryGetCorrectJobTitle(inputPosition, out string position, out errorMessage);
-            while (!Validator.TryGetCorrectJobTitle(inputPosition, out position, out errorMessage))
+            valid = attributeValidator.CheckValidation(dict["Position"], inputPosition, out errors);
+            while (!valid)
             {
-                Console.WriteLine(errorMessage);
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите должность, поле не является обязательным, для пропуска нажмите enter");
                 inputPosition = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["Position"], inputPosition, out errors);
             }
 
             Console.WriteLine("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter");
             var inputOther = Console.ReadLine();
+            valid = attributeValidator.CheckValidation(dict["Other"], inputOther, out errors);
+            while (!valid)
+            {
+                Console.Clear();
+                PrintErrors(errors);
+                Console.WriteLine("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter");
+                inputPosition = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict["Other"], inputOther, out errors);
+            }
 
-            var notebook = new NoteBook(firstName, middleName, lastName, phoneNumber, country, birthDay, organization, position, inputOther);
+            var birthDay = DateTime.ParseExact(inputBirthDay, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            var notebook = new NoteBook(inputFirstName, inputMiddleName, inputLastName,
+                                        inputPhoneNumber, inputCountry, birthDay,
+                                        inputOrganization, inputPosition, inputOther);
+
             NotebookStorage.SaveToFile(notebook);
             Console.WriteLine("Запись успешно создана");
             for (int i = 3; i >= 0; i--)
@@ -229,6 +264,30 @@ namespace NoteBookConsoleApp
             }
             Console.Clear();
             MainMenu(menuLabels);
+        }
+
+        static void PrintErrors(List<string> errors)
+        {
+            Console.WriteLine("Список допущенных ошибок при вводе");
+            for (int i = 0; i < errors.Count; i++)
+            {
+                Console.WriteLine($"Ошибка №{i + 1} - {errors[i]}");
+            }
+        }
+
+        static void GetInput(string input, string fieldName)
+        {
+            Console.WriteLine(input);
+            var attributeValidator = new AttributeValidator();
+            var inputFirstName = Console.ReadLine();
+            var valid = attributeValidator.CheckValidation(dict[fieldName], inputFirstName, out List<string> errors);
+            while (!valid)
+            {
+                PrintErrors(errors);
+                Console.WriteLine(input);
+                inputFirstName = Console.ReadLine();
+                valid = attributeValidator.CheckValidation(dict[fieldName], inputFirstName, out errors);
+            }
         }
 
         static void EditNotebook()
@@ -476,7 +535,7 @@ namespace NoteBookConsoleApp
                     notebooks[i].Organization.ToString(),
                     notebooks[i].Position.ToString(),
                     notebooks[i].Other.ToString(),
-                }); //(i + 1),notebooks[i]
+                });
             }
             Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
             MenuKey();
@@ -500,7 +559,7 @@ namespace NoteBookConsoleApp
                     notebooks[i].Organization.ToString(),
                     notebooks[i].Position.ToString(),
                     notebooks[i].Other.ToString(),
-                }); //(i + 1),notebooks[i]
+                });
             }
         }
 

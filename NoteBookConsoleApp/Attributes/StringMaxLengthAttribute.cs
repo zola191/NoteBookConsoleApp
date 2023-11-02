@@ -13,14 +13,14 @@ namespace NoteBookConsoleApp.Attributes
         }
         public bool IsValid(object value, out string errorMessage)
         {
-            if (value is string)
+            var item = value as string;
+            errorMessage = string.Empty;
+            if (item.Length > MaxLength)
             {
-                var item = (string)value;
-                errorMessage = string.Empty;
-                return item.Length > MaxLength;
+                errorMessage = $"Длина строки больше {MaxLength}";
+                return false;
             }
-            errorMessage = $"Длина строки больше {MaxLength}";
-            return false;
+            return true;
         }
     }
 }
