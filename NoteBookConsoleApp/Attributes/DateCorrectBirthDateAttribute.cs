@@ -17,7 +17,7 @@ namespace NoteBookConsoleApp.Attributes
 
             if (item.Length < 10 || item.Length > 10)
             {
-                errorMessage = "Длина строки отличается от требуемой, введите дату рождения в формате ####-##-##";
+                errorMessage = "Длина строки отличается от требуемой";
                 return false;
             }
             try
@@ -31,7 +31,7 @@ namespace NoteBookConsoleApp.Attributes
             }
             catch (FormatException)
             {
-                errorMessage = "Неправильный формат, введите дату рождения в формате ####-##-##";
+                errorMessage = "Требуется задать строку согласно требуемому формату";
                 return false;
             }
         }

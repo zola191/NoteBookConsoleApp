@@ -31,15 +31,15 @@ namespace NoteBookConsoleApp
         public DateTime BirthDay { get; set; } //(поле не является обязательным);
 
         [StringMinLength(2, true)]
-        [StringContainsNumber(false)]
+        [StringContainsNumber(true)]
         public string Organization { get; set; } //(поле не является обязательным);
 
         [StringMinLength(2, true)]
-        [StringContainsNumber(false)]
+        [StringContainsNumber(true)]
         public string Position { get; set; } //(поле не является обязательным);
 
         [StringMinLength(2, true)]
-        [StringContainsNumber(false)]
+        [StringContainsNumber(true)]
         public string Other { get; set; } //(поле не является обязательным);
 
         public NoteBook(string firstName, string middleName, string lastName,
