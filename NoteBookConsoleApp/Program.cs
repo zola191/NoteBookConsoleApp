@@ -141,8 +141,12 @@ namespace NoteBookConsoleApp
             var attributeValidator = new AttributeValidator();
             //GetInput("Введите свой номер телефона, начните ввод с 8", "PhoneNumber");
             //GetInput("Введите дату рождения в формате ####-##-##, поле не является обязательным, для пропуска нажмите enter", "BirthDay");
+
+            var noteBook = new NoteBook();
+
             Console.WriteLine("Введите Имя");
             var inputFirstName = Console.ReadLine();
+            
             var valid = attributeValidator.CheckValidation(dict["FirstName"], inputFirstName, out List<string> errors);
             while (!valid)
             {
@@ -155,6 +159,7 @@ namespace NoteBookConsoleApp
 
             Console.WriteLine("Введите Отчество, поле не является обязательным, для пропуска нажмите enter");
             var inputMiddleName = Console.ReadLine();
+
             valid = attributeValidator.CheckValidation(dict["MiddleName"], inputMiddleName, out errors);
             while (!valid)
             {
@@ -173,7 +178,7 @@ namespace NoteBookConsoleApp
                 Console.Clear();
                 PrintErrors(errors);
                 Console.WriteLine("Введите Фамилию");
-                inputFirstName = Console.ReadLine();
+                inputLastName = Console.ReadLine();
                 valid = attributeValidator.CheckValidation(dict["LastName"], inputLastName, out errors);
             }
 
@@ -185,7 +190,7 @@ namespace NoteBookConsoleApp
                 Console.Clear();
                 PrintErrors(errors);
                 Console.WriteLine("Введите свой номер телефона, начните ввод с 8");
-                inputFirstName = Console.ReadLine();
+                inputPhoneNumber = Console.ReadLine();
                 valid = attributeValidator.CheckValidation(dict["PhoneNumber"], inputPhoneNumber, out errors);
             }
 
@@ -197,7 +202,7 @@ namespace NoteBookConsoleApp
                 Console.Clear();
                 PrintErrors(errors);
                 Console.WriteLine("Введите страну");
-                inputFirstName = Console.ReadLine();
+                inputCountry = Console.ReadLine();
                 valid = attributeValidator.CheckValidation(dict["Country"], inputCountry, out errors);
             }
 
@@ -209,7 +214,7 @@ namespace NoteBookConsoleApp
                 Console.Clear();
                 PrintErrors(errors);
                 Console.WriteLine("Введите дату рождения в формате ####-##-##, поле не является обязательным, для пропуска нажмите enter");
-                inputFirstName = Console.ReadLine();
+                inputBirthDay = Console.ReadLine();
                 valid = attributeValidator.CheckValidation(dict["BirthDay"], inputBirthDay, out errors);
             }
 
@@ -245,7 +250,7 @@ namespace NoteBookConsoleApp
                 Console.Clear();
                 PrintErrors(errors);
                 Console.WriteLine("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter");
-                inputPosition = Console.ReadLine();
+                inputOther = Console.ReadLine();
                 valid = attributeValidator.CheckValidation(dict["Other"], inputOther, out errors);
             }
 

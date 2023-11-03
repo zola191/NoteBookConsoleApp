@@ -27,7 +27,7 @@ namespace NoteBookConsoleApp.Attributes
             
             if (!IsNullable && string.IsNullOrEmpty((string)value))
             {
-                errorMessage = $"Строка не должна быть пустой";
+                errorMessage = $"Строка обязательна для заполнения";
                 return false;
             }
 

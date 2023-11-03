@@ -12,7 +12,7 @@ namespace NoteBookConsoleApp
 
         [StringMinLength(2, true)]
         [StringContainsNumber(false)]
-        public string MiddleName { get; set; } // вопрос если пользователь ввел строку, то должен отрабатывать атрибут
+        public string MiddleName { get; set; } //(поле не является обязательным);
 
         [StringMinLength(2)]
         [StringContainsNumber(false)]
@@ -28,7 +28,7 @@ namespace NoteBookConsoleApp
         public string Country { get; set; }
 
         [DateCorrectBirthDate]
-        public DateTime BirthDay { get; set; } //(поле не является обязательным); // вопрос по валидации
+        public DateTime BirthDay { get; set; } //(поле не является обязательным);
 
         [StringMinLength(2, true)]
         [StringContainsNumber(false)]
