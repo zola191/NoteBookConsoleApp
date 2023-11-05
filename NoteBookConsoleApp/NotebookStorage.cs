@@ -5,7 +5,7 @@ namespace NoteBookConsoleApp
 {
     public static class NotebookStorage
     {
-        public static void Adjust(NoteBook noteBook, int position)
+        public static void SaveByIndex(NoteBook noteBook, int position)
         {
             var noteBooks = GetFromFile();
             noteBooks.RemoveAt(position);

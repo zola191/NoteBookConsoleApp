@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Linq;
 
 namespace NoteBookConsoleApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class StringOfDigit : Attribute, IAttributeValidator
+    public class StringStartWithAttribute : Attribute, IAttributeValidator
     {
-        public bool IsAllCharDigit { get; set; }
+        public string StartWithValue { get; set; }
 
-        public StringOfDigit(bool isAllCharDigit)
+        public StringStartWithAttribute(string startWith)
         {
-            IsAllCharDigit = isAllCharDigit;
+            StartWithValue = startWith;
         }
 
         public bool IsValid(object value, out string errorMessage)
         {
             var item = value as string;
             errorMessage = string.Empty;
-            if (item != null && item.All(char.IsDigit))
+            if (item.StartsWith(StartWithValue))
             {
                 return true;
             }
-            errorMessage = "Строка должна состоять из цифр";
+            errorMessage = $"Строка не начинается с {StartWithValue}";
             return false;
         }
     }

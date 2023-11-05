@@ -1,4 +1,5 @@
-﻿using NoteBookConsoleApp.Attributes;
+﻿using Newtonsoft.Json;
+using NoteBookConsoleApp.Attributes;
 using System;
 
 namespace NoteBookConsoleApp
@@ -21,6 +22,8 @@ namespace NoteBookConsoleApp
         [StringMinLength(11)]
         [StringMaxLength(11)]
         [StringOfDigit(true)]
+        [StringStartWith("8")]
+        [StringWithoutWhiteSpace]
         public string PhoneNumber { get; set; }
 
         [StringMinLength(2)]
@@ -42,6 +45,7 @@ namespace NoteBookConsoleApp
         [StringContainsNumber(true)]
         public string Other { get; set; } //(поле не является обязательным);
 
+        [JsonConstructor]
         public NoteBook(string firstName, string middleName, string lastName,
                         string phoneNumber, string country, DateTime birthDay,
                         string organization, string position, string other)

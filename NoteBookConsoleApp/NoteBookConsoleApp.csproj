@@ -48,13 +48,14 @@
   <ItemGroup>
     <Compile Include="Attributes\CapAttribute.cs" />
     <Compile Include="Attributes\DateCorrectBirthDateAttribute.cs" />
+    <Compile Include="Attributes\StringWithoutWhiteSpaceAttribute.cs" />
     <Compile Include="Attributes\StringContainsNumberAttribute.cs" />
-    <Compile Include="Attributes\StringOfDigit.cs" />
+    <Compile Include="Attributes\StringOfDigitAttribute.cs" />
+    <Compile Include="Attributes\StringStartWithAttribute.cs" />
     <Compile Include="DataTimeCustomConverter.cs" />
     <Compile Include="Attributes\StringMaxLengthAttribute.cs" />
     <Compile Include="Attributes\StringMinLengthAttribute.cs" />
     <Compile Include="Attributes\NotNullAttribute.cs" />
-    <Compile Include="trash\StringAttributeWrong.cs" />
     <Compile Include="AttributeValidator.cs" />
     <Compile Include="FileProvider.cs" />
     <Compile Include="Interfaces\IAttributeValidator.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="NotebookStorage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="trash\Validator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
