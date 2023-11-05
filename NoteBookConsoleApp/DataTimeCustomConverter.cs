@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace NoteBookConsoleApp.Attributes
+namespace NoteBookApp.Attributes
 {
     public class DataTimeCustomConverter : JsonConverter<DateTime>
     {

@@ -1,4 +1,4 @@
-﻿namespace NoteBookConsoleApp
+﻿namespace NoteBookApp
 {
     public interface IAttributeValidator
     {

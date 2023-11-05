@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,6 +58,7 @@
     <Compile Include="Attributes\StringMinLengthAttribute.cs" />
     <Compile Include="Attributes\NotNullAttribute.cs" />
     <Compile Include="AttributeValidator.cs" />
+    <Compile Include="Data\ApplicationDBContext.cs" />
     <Compile Include="FileProvider.cs" />
     <Compile Include="Interfaces\IAttributeValidator.cs" />
     <Compile Include="Menu.cs" />

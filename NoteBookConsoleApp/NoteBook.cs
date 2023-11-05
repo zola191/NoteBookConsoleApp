@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using NoteBookConsoleApp.Attributes;
+using NoteBookApp.Attributes;
 using System;
 
-namespace NoteBookConsoleApp
+namespace NoteBookApp
 {
     [Cap]
     public class NoteBook

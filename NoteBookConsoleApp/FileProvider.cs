@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NoteBookConsoleApp
+namespace NoteBookApp
 {
     public static class FileProvider
     {

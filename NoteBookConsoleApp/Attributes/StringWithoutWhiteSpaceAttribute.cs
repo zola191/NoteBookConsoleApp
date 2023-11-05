@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NoteBookConsoleApp.Attributes
+namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class StringWithoutWhiteSpaceAttribute : Attribute, IAttributeValidator

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NoteBookConsoleApp
+namespace NoteBookApp
 {
     public static class NotebookStorage
     {

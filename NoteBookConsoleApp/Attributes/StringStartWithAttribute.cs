@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NoteBookConsoleApp.Attributes
+namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class StringStartWithAttribute : Attribute, IAttributeValidator

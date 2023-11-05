@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace NoteBookConsoleApp
+namespace NoteBookApp
 {
     public class Program
     {
@@ -305,6 +305,8 @@ namespace NoteBookConsoleApp
                 Position = (string)GetInput("Введите должность, поле не является обязательным, для пропуска нажмите enter", "Position"),
                 Other = (string)GetInput("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter", "Other")
             };
+
+            Console.WriteLine("Выберите куда сохранить созданную запись");
 
             NotebookStorage.SaveToFile(noteBook);
             Console.WriteLine("Запись успешно создана");

@@ -1,10 +1,10 @@
-﻿using NoteBookConsoleApp.Attributes;
+﻿using NoteBookApp.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NoteBookConsoleApp
+namespace NoteBookApp
 {
     public class AttributeValidator
     {
