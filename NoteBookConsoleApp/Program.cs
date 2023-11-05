@@ -218,9 +218,6 @@ namespace NoteBookConsoleApp
             }
             else if (key.Key == ConsoleKey.Escape)
             {
-                //Console.Clear();
-                //MenuChose(menuLabels);
-                //MainMenu();
                 Environment.Exit(0);
             }
             Console.Clear();
@@ -489,83 +486,6 @@ namespace NoteBookConsoleApp
                 notebook.Position?.ToString(),
                 notebook.Other?.ToString(),
             }.ToArray();
-        }
-
-        private static bool TryGetNumberNotebook(string inputNumber, out int numberToEdit, out string errorMessage)
-        {
-            var notebooks = NotebookStorage.GetFromFile();
-            var notebookCount = notebooks.Count;
-            int number;
-            try
-            {
-                number = Convert.ToInt32(inputNumber);
-            }
-
-            catch (FormatException)
-            {
-                errorMessage = "Введите число";
-                numberToEdit = -1;
-                return false;
-            }
-
-            catch (OverflowException)
-            {
-                errorMessage = "Введите согласно таблице";
-                numberToEdit = -1;
-                return false;
-            }
-            if (number > notebookCount)
-            {
-                errorMessage = "Введите согласно таблице";
-                numberToEdit = -1;
-                return false;
-            }
-            if (number < 1)
-            {
-                errorMessage = "Введите согласно таблице";
-                numberToEdit = -1;
-                return false;
-            }
-            errorMessage = null;
-            numberToEdit = number;
-            return true;
-        }
-
-        private static bool TryGetPositionNotebook(string value, out int result, out string errorMessage)
-        {
-            while (true)
-            {
-                try
-                {
-                    result = Convert.ToInt32(value);
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Введите число");
-                    result = 0;
-                    errorMessage = null;
-                    return false;
-                }
-                catch (OverflowException)
-                {
-                    Console.WriteLine("Вы ввели слишком большое число");
-                    result = 0;
-                    errorMessage = null;
-                    return false;
-                }
-                if (result > typeof(NoteBook).GetProperties().Length)
-                {
-                    errorMessage = "Вы ввели слишком большое число";
-                    result = 0;
-                    return false;
-                }
-                else
-                {
-                    errorMessage = null;
-                    return true;
-                }
-            }
-
         }
 
         private static bool TryGetUserAnswer(string userAnswer, out bool isTrueUserAnswer, out string errorMessage)
