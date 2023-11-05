@@ -8,8 +8,8 @@ namespace NoteBookConsoleApp
 {
     public class Program
     {
-        static string fullFormatOutput = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-20}||{6,-15}||{7,-20}||{8,-25}||{9,-35}||";
-        static string fullFormatOutput2 = "||{0,-15}||{1,-20}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-20}||{7,-25}||{8,-35}||";
+        static string fullFormatOutputWithFirstIndex = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-20}||{6,-15}||{7,-20}||{8,-25}||{9,-35}||";
+        static string fullFormatOutputWithoutFirstIndex = "||{0,-15}||{1,-20}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-20}||{7,-25}||{8,-35}||";
         static string shortFormatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-15} ||";
         static string[] fulloutputArray = new string[10]
         {
@@ -174,11 +174,11 @@ namespace NoteBookConsoleApp
                 {
                     Console.BackgroundColor = ConsoleColor.Gray;
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine(fullFormatOutput2, PrintNotebook(notebooks[i]));
+                    Console.WriteLine(fullFormatOutputWithoutFirstIndex, PrintNotebook(notebooks[i]));
                 }
                 else
                 {
-                    Console.WriteLine(fullFormatOutput2, PrintNotebook(notebooks[i]));
+                    Console.WriteLine(fullFormatOutputWithoutFirstIndex, PrintNotebook(notebooks[i]));
                 }
                 Console.ResetColor();
             }
@@ -452,10 +452,10 @@ namespace NoteBookConsoleApp
 
         static void PrintFullInfo(List<NoteBook> notebooks)
         {
-            Console.WriteLine(fullFormatOutput, fulloutputArray);
+            Console.WriteLine(fullFormatOutputWithFirstIndex, fulloutputArray);
             for (int i = 0; i < notebooks.Count; i++)
             {
-                Console.WriteLine($"{fullFormatOutput}", new string[10]
+                Console.WriteLine($"{fullFormatOutputWithFirstIndex}", new string[10]
                 {
                     (i+1).ToString(),
 
