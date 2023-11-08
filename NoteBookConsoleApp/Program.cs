@@ -137,8 +137,7 @@ namespace NoteBookApp
                 }
                 else if (selectedMenuItem == (int)Menu.Exit)
                 {
-                    Console.Clear();
-                    break;
+                    Environment.Exit(0);
                 }
             }
         }
