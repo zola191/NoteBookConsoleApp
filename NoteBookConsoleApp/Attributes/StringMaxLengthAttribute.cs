@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoteBookApp.Attributes
+﻿namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class StringMaxLengthAttribute : Attribute, IAttributeValidator
@@ -15,6 +13,7 @@ namespace NoteBookApp.Attributes
         {
             var item = value as string;
             errorMessage = string.Empty;
+            item = string.Join("", item.Where(c => !char.IsWhiteSpace(c)));
             if (item.Length > MaxLength)
             {
                 errorMessage = $"Длина строки больше {MaxLength}";

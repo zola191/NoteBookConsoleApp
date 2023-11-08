@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace NoteBookApp.Attributes
+﻿namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class StringOfDigitAttribute : Attribute, IAttributeValidator

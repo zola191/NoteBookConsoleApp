@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoteBookApp.Attributes
+﻿namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     //класс создан как маркер для объекта

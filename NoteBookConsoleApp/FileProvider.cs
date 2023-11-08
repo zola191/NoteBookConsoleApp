@@ -1,12 +1,12 @@
-﻿using System.IO;
+﻿using NoteBookApp.Interfaces;
 
 namespace NoteBookApp
 {
-    public static class FileProvider
+    public class FileProvider
     {
         private static string path = @"result.json";
 
-        public static void Append(string value)
+        public void Append(string value)
         {
             using (var fs = new FileStream(path, FileMode.Append, FileAccess.Write))
             {
@@ -17,12 +17,12 @@ namespace NoteBookApp
             }
         }
 
-        public static void ReWrite(string value)
+        public void ReWrite(string value)
         {
             File.WriteAllText(path, value);
         }
 
-        public static string Get()
+        public string Get()
         {
             if (!File.Exists(path))
             {

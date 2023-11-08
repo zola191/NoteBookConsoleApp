@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoteBookApp.Attributes
+﻿namespace NoteBookApp.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class StringMinLengthAttribute : Attribute, IAttributeValidator
@@ -32,6 +30,7 @@ namespace NoteBookApp.Attributes
             }
 
             var item = (string)value;
+            item = string.Join("", item.Where(c=>!char.IsWhiteSpace(c)));
             if (item.Length < MinLength)
             {
                 errorMessage = $"Длина строки не должна быть меньше {MinLength} символов";

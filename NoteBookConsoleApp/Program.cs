@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NoteBookApp.Interfaces;
 using System.Reflection;
-using System.Threading;
 
 namespace NoteBookApp
 {
     public class Program
     {
-        static string fullFormatOutputWithFirstIndex = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-20}||{6,-15}||{7,-20}||{8,-25}||{9,-35}||";
-        static string fullFormatOutputWithoutFirstIndex = "||{0,-15}||{1,-20}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-20}||{7,-25}||{8,-35}||";
-        static string shortFormatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-15} ||";
-        static string[] fulloutputArray = new string[10]
+        private static IProvider _provider;
+
+        private static string fullFormatOutputWithFirstIndex = "||{0,-15}||{1,-15}||{2,-20}||{3,-20}||{4,-20}||{5,-20}||{6,-15}||{7,-20}||{8,-25}||{9,-35}||";
+        private static string fullFormatOutputWithoutFirstIndex = "||{0,-15}||{1,-20}||{2,-20}||{3,-20}||{4,-20}||{5,-15}||{6,-20}||{7,-25}||{8,-35}||";
+        private static string shortFormatOutput = "||{0,-5} || {1,-10} || {2,-10} || {3,-15} ||";
+        private static string[] fulloutputArray = new string[10]
         {
             "№","Имя", "Отчество", "Фамилия", "Номер телефона", "Страна", "Дата рождения", "Организация", "Должность", "Прочее"
         };
-        static string[] shortoutputArray = new string[4]
+        private static string[] shortoutputArray = new string[4]
         {
             "Поз.", "Фамилия:", "Имя:", "Номер телефона:"
         };
-        static int index = 0;
-        static List<string> menuLabels = new List<string>()
+        private static int index = 0;
+        private static List<string> menuLabels = new List<string>()
         {
             "1. Создание новой записи",
             "2. Редактирование созданных записей",
@@ -29,19 +28,19 @@ namespace NoteBookApp
             "5. Просмотр созданных записей, с полной информацией",
             "6. Выход"
         };
-        static Dictionary<string, Func<PropertyInfo>> ValidationDict = new Dictionary<string, Func<PropertyInfo>>()
+        private static Dictionary<string, Func<PropertyInfo>> ValidationDict = new Dictionary<string, Func<PropertyInfo>>()
         {
-            { "FirstName", ()=>typeof(NoteBook).GetProperty("FirstName") },
-            { "MiddleName", ()=>typeof(NoteBook).GetProperty("MiddleName") },
-            { "LastName", ()=>typeof(NoteBook).GetProperty("LastName") },
-            { "PhoneNumber", ()=>typeof(NoteBook).GetProperty("PhoneNumber") },
-            { "Country", ()=>typeof(NoteBook).GetProperty("Country") },
-            { "BirthDay", ()=>typeof(NoteBook).GetProperty("BirthDay") },
-            { "Organization", ()=>typeof(NoteBook).GetProperty("Organization") },
-            { "Position", ()=>typeof(NoteBook).GetProperty("Position") },
-            { "Other", ()=>typeof(NoteBook).GetProperty("Other") },
+            { "FirstName", ()=>typeof(Notebook).GetProperty("FirstName") },
+            { "MiddleName", ()=>typeof(Notebook).GetProperty("MiddleName") },
+            { "LastName", ()=>typeof(Notebook).GetProperty("LastName") },
+            { "PhoneNumber", ()=>typeof(Notebook).GetProperty("PhoneNumber") },
+            { "Country", ()=>typeof(Notebook).GetProperty("Country") },
+            { "BirthDay", ()=>typeof(Notebook).GetProperty("BirthDay") },
+            { "Organization", ()=>typeof(Notebook).GetProperty("Organization") },
+            { "Position", ()=>typeof(Notebook).GetProperty("Position") },
+            { "Other", ()=>typeof(Notebook).GetProperty("Other") },
         };
-        static Dictionary<string, string> PrintDict = new Dictionary<string, string>()
+        private static Dictionary<string, string> PrintDict = new Dictionary<string, string>()
         {
             { "FirstName","Введите Имя" },
             { "MiddleName","Введите Отчество, поле не является обязательным, для пропуска нажмите enter" },
@@ -56,16 +55,43 @@ namespace NoteBookApp
 
         private static void Main(string[] args)
         {
+            // не дает записать символы кирилицы
             //Console.OutputEncoding = System.Text.Encoding.UTF8;
             //Console.InputEncoding = System.Text.Encoding.UTF8;
+
+            var SaveNotebookchoice = new List<string>()
+            {
+                "Базой данных",
+                "С файловой системой"
+            };
+            while (true)
+            {
+                Console.WriteLine("Выберите с чем работать");
+                var selectedSaveItem = MenuChoice(SaveNotebookchoice);
+                if (selectedSaveItem == 0)
+                {
+                    _provider = new DBNotebookProvider();
+                    break;
+                }
+                else if (selectedSaveItem == 1)
+                {
+                    _provider = new FileNotebookProvider();
+                    break;
+                }
+                Console.Clear();
+            }
+            Console.Clear();
+
             MainMenu();
         }
         //цикличность при выборе? // обнуление ататического поля index
         private static void MainMenu()
         {
+
             while (true)
             {
-                var selectedMenuItem = MenuChose(menuLabels);
+                var selectedMenuItem = MenuChoice(menuLabels);
+                var fileNotebookProvider = new FileNotebookProvider();
                 if (selectedMenuItem == (int)Menu.CreateNewNote)
                 {
                     index = 0;
@@ -92,7 +118,8 @@ namespace NoteBookApp
                     index = 0;
                     Console.Clear();
                     Console.WriteLine("Полная запись");
-                    var notebooks = NotebookStorage.GetFromFile();
+                    //var notebooks = NotebookStorageFile.GetFromFile();
+                    var notebooks = fileNotebookProvider.Get();
                     PrintFullInfo(notebooks);
                     Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
                     MenuKeyPress();
@@ -102,7 +129,8 @@ namespace NoteBookApp
                     index = 0;
                     Console.Clear();
                     Console.WriteLine("Короткая запись");
-                    var notebooks = NotebookStorage.GetFromFile();
+                    //var notebooks = NotebookStorageFile.GetFromFile();
+                    var notebooks = fileNotebookProvider.Get();
                     PrintShortInfo(notebooks);
                     Console.WriteLine("Для возврата в главное меню нажмите Backspace, для выхода нажмите Esq");
                     MenuKeyPress();
@@ -114,8 +142,8 @@ namespace NoteBookApp
                 }
             }
         }
-
-        private static int MenuChose(List<string> menuLabels)
+        //логика MenuChoice незначительно отличаются друг от друга, но у меня 3 метода повторяют друг друга
+        private static int MenuChoice(List<string> menuLabels)
         {
             for (int i = 0; i < menuLabels.Count; i++)
             {
@@ -156,6 +184,7 @@ namespace NoteBookApp
             }
             else if (key.Key == ConsoleKey.Enter)
             {
+                //_provider=new ;
                 return index;
             }
             else if (key.Key == ConsoleKey.Escape)
@@ -166,7 +195,7 @@ namespace NoteBookApp
             return -1;
         }
 
-        private static int MenuChose(List<NoteBook> notebooks, out bool flag)
+        private static int MenuChoice(List<Notebook> notebooks, out bool flag)
         {
             for (int i = 0; i < notebooks.Count(); i++)
             {
@@ -226,7 +255,7 @@ namespace NoteBookApp
             return -1;
         }
 
-        private static int MenuChose(NoteBook noteBook, out bool flag)
+        private static int MenuChoice(Notebook noteBook, out bool flag)
         {
             var properties = noteBook.GetType().GetProperties();
             var propNames = properties.Select(q => q.Name).ToArray();
@@ -293,7 +322,7 @@ namespace NoteBookApp
 
         private static void CreateNewNotebook()
         {
-            var noteBook = new NoteBook()
+            var noteBook = new Notebook()
             {
                 FirstName = (string)GetInput("Введите Имя", "FirstName"),
                 MiddleName = (string)GetInput("Введите Отчество, поле не является обязательным, для пропуска нажмите enter", "MiddleName"),
@@ -306,9 +335,10 @@ namespace NoteBookApp
                 Other = (string)GetInput("Введите свои примечания, поле не является обязательным, для пропуска нажмите enter", "Other")
             };
 
-            Console.WriteLine("Выберите куда сохранить созданную запись");
+            // при старте приложения создать все типы файловых систем БД или в файл
 
-            NotebookStorage.SaveToFile(noteBook);
+            _provider.Append(noteBook);
+
             Console.WriteLine("Запись успешно создана");
             for (int i = 3; i >= 0; i--)
             {
@@ -316,7 +346,7 @@ namespace NoteBookApp
                 Thread.Sleep(1000);
             }
             Console.Clear();
-            MenuChose(menuLabels);
+            MenuChoice(menuLabels);
         }
 
         private static void PrintErrors(List<string> errors)
@@ -344,20 +374,21 @@ namespace NoteBookApp
             return inputFirstName;
         }
 
-        private static void ChangePropValue(NoteBook noteBook, string propName, string printInfo)
+        private static void ChangePropValue(Notebook noteBook, string propName, string printInfo)
         {
             var newValue = (string)GetInput(printInfo, propName);
-            typeof(NoteBook).GetProperty(propName).SetValue(noteBook, newValue, null);
+            typeof(Notebook).GetProperty(propName).SetValue(noteBook, newValue, null);
         }
 
         private static void EditNotebookMenu()
         {
-            var notebooks = NotebookStorage.GetFromFile();
-            var indexToEditNotebook = MenuChose(notebooks, out bool flag);
+            var notebooks = _provider.Get();
+            //var notebooks = NotebookStorageFile.GetFromFile();
+            var indexToEditNotebook = MenuChoice(notebooks, out bool flag);
             while (flag)
             {
                 Console.WriteLine("Редактирование записей");
-                indexToEditNotebook = MenuChose(notebooks, out flag);
+                indexToEditNotebook = MenuChoice(notebooks, out flag);
             }
             Console.Clear();
             var notebook = notebooks[indexToEditNotebook];
@@ -365,16 +396,20 @@ namespace NoteBookApp
             while (true)
             {
                 //esq выход в прошлое меню
-                var indexToEditProperty = MenuChose(notebook, out flag);
+                var indexToEditProperty = MenuChoice(notebook, out flag);
                 while (flag)
                 {
-                    indexToEditProperty = MenuChose(notebook, out flag);
+                    indexToEditProperty = MenuChoice(notebook, out flag);
                 }
                 var properties = notebook.GetType().GetProperties();
                 var propName = properties[indexToEditProperty].Name;
                 ChangePropValue(notebook, propName, PrintDict[propName]);
-                var x = notebook;
-                NotebookStorage.SaveByIndex(notebook, indexToEditNotebook);
+                _provider.ChangeNotebook(notebook);
+
+                //NotebookStorageFile.SaveByIndex(notebook, indexToEditNotebook);
+                //fileNotebookProvider.SaveByIndex(notebook, indexToEditNotebook);
+                // как сохранить в бд по индексу? и надо ли?
+
                 Console.Clear();
             }
         }
@@ -404,7 +439,9 @@ namespace NoteBookApp
 
         private static void RemoveNotebook()
         {
-            var notebooks = NotebookStorage.GetFromFile();
+            //var notebooks = NotebookStorageFile.GetFromFile();
+            //var fileNotebookProvider = new FileNotebookProvider();
+            var notebooks = _provider.Get();
             if (notebooks.Count() == 0)
             {
                 Console.WriteLine("нет записей для удаления");
@@ -414,11 +451,11 @@ namespace NoteBookApp
 
             else
             {
-                var indexToRemoveNotebook = MenuChose(notebooks, out bool flag);
+                var indexToRemoveNotebook = MenuChoice(notebooks, out bool flag);
                 while (flag)
                 {
                     Console.WriteLine("Удаление записей");
-                    indexToRemoveNotebook = MenuChose(notebooks, out flag);
+                    indexToRemoveNotebook = MenuChoice(notebooks, out flag);
                 }
 
                 Console.WriteLine("Вы действительно хотите удалить выбранную запись? введите да или нет");
@@ -431,13 +468,17 @@ namespace NoteBookApp
 
                 if (isTrueUserAnswer)
                 {
-                    NotebookStorage.RemoveAtPosition(indexToRemoveNotebook);
+                    //NotebookStorageFile.RemoveAtPosition(indexToRemoveNotebook);
+                    //fileNotebookProvider.RemoveByPosition(indexToRemoveNotebook);
+                    //удалить по индесу?
+                    var notebook = notebooks[indexToRemoveNotebook - 1];
+                    _provider.DeleteNotebook(notebooks[indexToRemoveNotebook-1]);
                 }
                 Console.Clear();
             }
         }
 
-        static void PrintShortInfo(List<NoteBook> notebooks)
+        static void PrintShortInfo(List<Notebook> notebooks)
         {
             Console.WriteLine(shortFormatOutput, shortoutputArray);
             for (int i = 0; i < notebooks.Count; i++)
@@ -452,7 +493,7 @@ namespace NoteBookApp
             }
         }
 
-        static void PrintFullInfo(List<NoteBook> notebooks)
+        static void PrintFullInfo(List<Notebook> notebooks)
         {
             Console.WriteLine(fullFormatOutputWithFirstIndex, fulloutputArray);
             for (int i = 0; i < notebooks.Count; i++)
@@ -474,7 +515,7 @@ namespace NoteBookApp
             }
         }
 
-        private static string[] PrintNotebook(NoteBook notebook)
+        private static string[] PrintNotebook(Notebook notebook)
         {
             return new List<string>()
             {

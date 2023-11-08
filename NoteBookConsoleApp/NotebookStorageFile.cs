@@ -1,25 +1,26 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace NoteBookApp
 {
-    public static class NotebookStorage
+    public static class NotebookStorageFile
     {
-        public static void SaveByIndex(NoteBook noteBook, int position)
+        public static void SaveByIndex(Notebook noteBook, int position)
         {
             var noteBooks = GetFromFile();
             noteBooks.RemoveAt(position);
             noteBooks.Insert(position, noteBook);
             var serializeNoteBooks = JsonConvert.SerializeObject(noteBooks, Formatting.Indented);
-            FileProvider.ReWrite(serializeNoteBooks);
+            var fileProvider = new FileProvider();
+            fileProvider.ReWrite(serializeNoteBooks);
         }
 
-        public static void SaveToFile(NoteBook noteBook)
+        public static void SaveToFile(Notebook noteBook)
         {
             var noteBooks = GetFromFile();
             noteBooks.Add(noteBook);
             var serializeNoteBooks = JsonConvert.SerializeObject(noteBooks, Formatting.Indented);
-            FileProvider.ReWrite(serializeNoteBooks);
+            var fileProvider = new FileProvider();
+            fileProvider.ReWrite(serializeNoteBooks);
         }
 
         public static void RemoveAtPosition(int position)
@@ -27,17 +28,19 @@ namespace NoteBookApp
             var noteBooks = GetFromFile();
             noteBooks.RemoveAt(position);
             var serializeNoteBooks = JsonConvert.SerializeObject(noteBooks, Formatting.Indented);
-            FileProvider.ReWrite(serializeNoteBooks);
+            var fileProvider = new FileProvider();
+            fileProvider.ReWrite(serializeNoteBooks);
         }
 
-        public static List<NoteBook> GetFromFile()
+        public static List<Notebook> GetFromFile()
         {
-            var values = FileProvider.Get();
+            var fileProvider =new FileProvider();
+            var values = fileProvider.Get();
             if (values == null)
             {
-                return new List<NoteBook>();
+                return new List<Notebook>();
             }
-            return JsonConvert.DeserializeObject<List<NoteBook>>(values);
+            return JsonConvert.DeserializeObject<List<Notebook>>(values);
         }
     }
 }
